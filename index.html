@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapeando - Linha do Tempo Metroferroviária</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- Header / Logo -->
+    <header class="glass-panel">
+        <img src="Logo-removebg-preview.png" alt="Mapeando" class="logo-img">
+        <h1 class="title">Evolução Metroferroviária</h1>
+    </header>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Timeline Slider -->
+    <div class="timeline-panel glass-panel">
+        <div class="slider-header">
+            <span id="start-year">1974</span>
+            <span id="current-year-display" class="highlight-year">2026</span>
+            <span id="end-year">2026</span>
+        </div>
+        <input type="range" id="time-slider" min="1974" max="2026" value="2026" step="1">
+        <p class="slider-hint">Arraste para ver a evolução da rede ao longo do tempo</p>
+    </div>
+
+    <!-- Layer Controls (Custom) -->
+    <div class="controls-panel glass-panel">
+        <div class="filter-group" id="filter-modal">
+            <h3>Tipo (Modal)</h3>
+            <!-- Dynamic modal checkboxes -->
+        </div>
+        <div class="filter-group" id="filter-lines">
+            <h3>Linhas</h3>
+            <!-- Dynamic line checkboxes -->
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Data as JS -->
+    <script src="data/linhas.js"></script>
+    <script src="data/poligonos.js"></script>
+    <script src="data/pontos.js"></script>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
