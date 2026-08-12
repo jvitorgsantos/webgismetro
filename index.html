@@ -18,37 +18,84 @@
 </head>
 <body>
     
-    <!-- Header / Logo -->
-    <header class="glass-panel">
-        <img src="Logo-removebg-preview.png" alt="Mapeando" class="logo-img">
-        <h1 class="title">Evolução Metroferroviária</h1>
-    </header>
+    <!-- Top Left Container (Header & Search) -->
+    <div class="top-left-panel" id="header-container">
+        <button class="toggle-panel-btn" id="toggle-header" title="Ocultar Painel">▲</button>
+        <header class="glass-panel" id="header-content">
+            <img src="Logo-removebg-preview.png" alt="Mapeando" class="logo-img">
+            <h1 class="title">Evolução Metroferroviária</h1>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Buscar estação...">
+                <ul id="search-results" class="search-results hidden"></ul>
+            </div>
+        </header>
+    </div>
 
     <!-- Map Container -->
     <div id="map"></div>
 
     <!-- Timeline Slider -->
-    <div class="timeline-panel glass-panel">
-        <div class="slider-header">
-            <span id="start-year">1974</span>
-            <span id="current-year-display" class="highlight-year">2026</span>
-            <span id="end-year">2026</span>
+    <div class="timeline-panel glass-panel" id="timeline-container">
+        <button class="toggle-panel-btn toggle-timeline" id="toggle-timeline" title="Ocultar Linha do Tempo">▼</button>
+        <div id="timeline-content">
+            <div class="timeline-controls">
+                <button id="play-pause-btn" class="play-btn">▶</button>
+                <div class="slider-wrapper">
+                    <div class="slider-header">
+                        <span id="start-year">1974</span>
+                        <span id="current-year-display" class="highlight-year">2026</span>
+                        <span id="end-year">2026</span>
+                    </div>
+                    <input type="range" id="time-slider" min="1974" max="2026" value="2026" step="1">
+                </div>
+            </div>
+            <p class="slider-hint">Arraste ou dê Play para ver a evolução da rede</p>
         </div>
-        <input type="range" id="time-slider" min="1974" max="2026" value="2026" step="1">
-        <p class="slider-hint">Arraste para ver a evolução da rede ao longo do tempo</p>
     </div>
 
     <!-- Layer Controls (Custom) -->
-    <div class="controls-panel glass-panel">
-        <div class="filter-group" id="filter-modal">
-            <h3>Tipo (Modal)</h3>
-            <!-- Dynamic modal checkboxes -->
-        </div>
-        <div class="filter-group" id="filter-lines">
-            <h3>Linhas</h3>
-            <!-- Dynamic line checkboxes -->
+    <div class="controls-panel glass-panel" id="controls-container">
+        <button class="toggle-panel-btn toggle-controls" id="toggle-controls" title="Ocultar Controles">▶</button>
+        <div id="controls-content">
+            
+            <!-- Status Obra -->
+            <div class="accordion open" id="acc-status">
+                <div class="accordion-header">Cenário (Status Obra)</div>
+                <div class="accordion-body" id="status-container">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Camadas Visíveis -->
+            <div class="accordion open" id="acc-geometrias">
+                <div class="accordion-header">Geometrias Visíveis</div>
+                <div class="accordion-body" id="geometry-container">
+                    <label class="line-pill">
+                        <input type="checkbox" value="Line" class="filter-geo-cb" checked>
+                        <span>➖ Traçados (Linhas)</span>
+                    </label>
+                    <label class="line-pill">
+                        <input type="checkbox" value="Point" class="filter-geo-cb" checked>
+                        <span>📍 Estações (Pontos)</span>
+                    </label>
+                    <label class="line-pill">
+                        <input type="checkbox" value="Polygon" class="filter-geo-cb" checked>
+                        <span>🛑 Áreas (Polígonos)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Modals and Lines (Dynamic Accordions) -->
+            <div id="accordion-container">
+                <!-- Injected via JS -->
+            </div>
+            
         </div>
     </div>
+
+    <!-- Custom Tooltip (Hover) -->
+    <div id="custom-tooltip" class="glass-panel hidden"></div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
