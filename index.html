@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapeando - Linha do Tempo Metroferroviária</title>
+    <title>Mapeando - Dashboard Metroferroviário</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -11,91 +11,169 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     
-    <!-- Top Left Container (Header & Search) -->
-    <div class="top-left-panel" id="header-container">
-        <button class="toggle-panel-btn" id="toggle-header" title="Ocultar Painel">▲</button>
-        <header class="glass-panel" id="header-content">
+    <!-- Top Navbar -->
+    <nav class="dashboard-navbar">
+        <div class="navbar-brand">
             <img src="Logo-removebg-preview.png" alt="Mapeando" class="logo-img">
             <h1 class="title">Evolução Metroferroviária</h1>
-            
+        </div>
+        
+        <div class="navbar-actions">
+            <button class="stats-btn" id="open-stats-btn">
+                <span>📊</span> Estatísticas da Rede
+            </button>
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Buscar estação...">
+                <input type="text" id="search-input" placeholder="Buscar linha ou estação...">
                 <ul id="search-results" class="search-results hidden"></ul>
             </div>
-        </header>
-    </div>
+        </div>
+    </nav>
 
-    <!-- Map Container -->
-    <div id="map"></div>
+    <!-- App Body (Sidebar + Map) -->
+    <div class="dashboard-body">
+        
+        <!-- Left Sidebar -->
+        <aside class="dashboard-sidebar glass-panel">
+            
+            <!-- Custom Basemap Controls -->
+            <div class="sidebar-section">
+                <div class="section-title">Mapa de Fundo</div>
+                <div class="basemap-grid">
+                    <button class="basemap-btn active" data-map="Claro (Light)">
+                        <span class="basemap-icon">🗺️</span>
+                        Claro
+                    </button>
+                    <button class="basemap-btn" data-map="Escuro (Dark)">
+                        <span class="basemap-icon">🌙</span>
+                        Escuro
+                    </button>
+                    <button class="basemap-btn" data-map="Google Satellite">
+                        <span class="basemap-icon">🛰️</span>
+                        Satélite
+                    </button>
+                </div>
+            </div>
 
-    <!-- Timeline Slider -->
-    <div class="timeline-panel glass-panel" id="timeline-container">
-        <button class="toggle-panel-btn toggle-timeline" id="toggle-timeline" title="Ocultar Linha do Tempo">▼</button>
-        <div id="timeline-content">
-            <div class="timeline-controls">
-                <button id="play-pause-btn" class="play-btn">▶</button>
-                <div class="slider-wrapper">
-                    <div class="slider-header">
-                        <span id="start-year">1974</span>
-                        <span id="current-year-display" class="highlight-year">2026</span>
-                        <span id="end-year">2026</span>
+            <!-- Camadas & Filtros Section -->
+            <div class="sidebar-section" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+                <div class="section-title">Camadas & Filtros</div>
+                
+                <!-- Tabs Header -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="tab-linhas">Linhas por Modal</button>
+                    <button class="tab-btn" data-tab="tab-filtros">Filtros Avançados</button>
+                </div>
+
+                <!-- Tabs Content Area -->
+                <div id="controls-content">
+                    
+                    <!-- Tab: Linhas por Modal -->
+                    <div class="tab-content active" id="tab-linhas">
+                        <div id="accordion-container">
+                            <!-- Injected via JS -->
+                        </div>
                     </div>
-                    <input type="range" id="time-slider" min="1974" max="2026" value="2026" step="1">
+
+                    <!-- Tab: Filtros -->
+                    <div class="tab-content" id="tab-filtros">
+                        <!-- Status Obra -->
+                        <div class="accordion open" id="acc-status">
+                            <div class="accordion-header">Cenário (Status Obra)</div>
+                            <div class="accordion-body" id="status-container">
+                                <!-- Injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Camadas Visíveis -->
+                        <div class="accordion open" id="acc-geometrias">
+                            <div class="accordion-header">Geometrias Visíveis</div>
+                            <div class="accordion-body" id="geometry-container">
+                                <label class="line-pill">
+                                    <input type="checkbox" value="Line" class="filter-geo-cb" checked>
+                                    <span>➖ Traçados (Linhas)</span>
+                                </label>
+                                <label class="line-pill">
+                                    <input type="checkbox" value="Polygon" class="filter-geo-cb" checked>
+                                    <span>🛑 Áreas (Polígonos)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <p class="slider-hint">Arraste ou dê Play para ver a evolução da rede</p>
-        </div>
+
+        </aside>
+
+        <!-- Main Map Area -->
+        <main class="dashboard-main">
+            <div id="map"></div>
+            
+            <!-- Timeline Slider (Floating inside Map) -->
+            <div class="timeline-panel glass-panel" id="timeline-container">
+                <button class="toggle-panel-btn toggle-timeline" id="toggle-timeline" title="Ocultar Linha do Tempo">▼</button>
+                <div id="timeline-content">
+                    <div class="timeline-controls">
+                        <button id="play-pause-btn" class="play-btn">▶</button>
+                        <div class="slider-wrapper">
+                            <div class="slider-header">
+                                <span id="start-year">1867</span>
+                                <span id="current-year-display" class="highlight-year">2026</span>
+                                <span id="end-year">2026</span>
+                            </div>
+                            <input type="range" id="time-slider" min="1867" max="2026" value="2026" step="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Tooltip (Hover) -->
+            <div id="custom-tooltip" class="glass-panel hidden"></div>
+        </main>
+        
     </div>
 
-    <!-- Layer Controls (Custom) -->
-    <div class="controls-panel glass-panel" id="controls-container">
-        <button class="toggle-panel-btn toggle-controls" id="toggle-controls" title="Ocultar Controles">▶</button>
-        <div id="controls-content">
-            
-            <!-- Status Obra -->
-            <div class="accordion open" id="acc-status">
-                <div class="accordion-header">Cenário (Status Obra)</div>
-                <div class="accordion-body" id="status-container">
-                    <!-- Injected via JS -->
+    <!-- Statistics Modal -->
+    <div id="stats-modal" class="modal-backdrop hidden">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>📊 Estatísticas da Rede (<span id="stats-year">2026</span>)</h2>
+                <button class="modal-close" id="close-stats-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-total-lines">0</span>
+                        <span class="kpi-label">Linhas em Operação/Ativas</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-total-segments">0</span>
+                        <span class="kpi-label">Trechos Mapeados</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-value" id="kpi-modal-count">0</span>
+                        <span class="kpi-label">Modais Ativos</span>
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <h3>Trechos por Modal</h3>
+                    <div id="modal-breakdown-list" class="breakdown-list"></div>
+                </div>
+
+                <div class="stats-section">
+                    <h3>Status das Obras</h3>
+                    <div id="status-breakdown-list" class="breakdown-list"></div>
                 </div>
             </div>
-
-            <!-- Camadas Visíveis -->
-            <div class="accordion open" id="acc-geometrias">
-                <div class="accordion-header">Geometrias Visíveis</div>
-                <div class="accordion-body" id="geometry-container">
-                    <label class="line-pill">
-                        <input type="checkbox" value="Line" class="filter-geo-cb" checked>
-                        <span>➖ Traçados (Linhas)</span>
-                    </label>
-                    <label class="line-pill">
-                        <input type="checkbox" value="Point" class="filter-geo-cb" checked>
-                        <span>📍 Estações (Pontos)</span>
-                    </label>
-                    <label class="line-pill">
-                        <input type="checkbox" value="Polygon" class="filter-geo-cb" checked>
-                        <span>🛑 Áreas (Polígonos)</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Modals and Lines (Dynamic Accordions) -->
-            <div id="accordion-container">
-                <!-- Injected via JS -->
-            </div>
-            
         </div>
     </div>
-
-    <!-- Custom Tooltip (Hover) -->
-    <div id="custom-tooltip" class="glass-panel hidden"></div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -103,7 +181,6 @@
     <!-- Data as JS -->
     <script src="data/linhas.js"></script>
     <script src="data/poligonos.js"></script>
-    <script src="data/pontos.js"></script>
 
     <!-- Custom JS -->
     <script src="app.js"></script>
